@@ -1,0 +1,56 @@
+<html>
+<head>
+	<script src="libprimer3.js"></script>
+</head>
+
+<body onload="onLoad()">
+<script>
+
+function Primer3() {
+	this.p3_create_global_settings = Module.cwrap('p3_create_global_settings', 'number');
+	this.create_seq_arg = Module.cwrap('create_seq_arg', 'number');
+
+	this.p3_set_sa_sequence = Module.cwrap('p3_set_sa_sequence', 'number', ['number', 'string']);
+	this.p3_set_sa_left_input = Module.cwrap('p3_set_sa_left_input', 'number', ['number', 'string']);
+	this.p3_set_sa_right_input = Module.cwrap('p3_set_sa_right_input', 'number', ['number', 'string']);
+
+	this.choose_primers = Module.cwrap('choose_primers', 'number', ['number', 'number']);
+	this.p3_get_rv_best_pairs = Module.cwrap('p3_get_rv_best_pairs', 'number', ['number', 'string']);
+	this.p3_get_rv_fwd = Module.cwrap('p3_get_rv_fwd', 'number', ['number'])
+
+	this.libprimer3_release = Module.cwrap('libprimer3_release', 'string')
+}
+
+function onLoad()
+{
+	var primer3 = new Primer3();
+	console.log(primer3.libprimer3_release());
+
+	var gs = primer3.p3_create_global_settings();
+	var arg = primer3.create_seq_arg();
+
+	primer3.p3_set_sa_sequence(arg, 'GATTAGATTTTTTTTTTTTTTTTTTTTTGATTAGA');
+	primer3.p3_set_sa_left_input(arg, 'GATTAGA');
+	primer3.p3_set_sa_right_input(arg, 'TCTAATC');
+
+	var res = primer3.choose_primers(arg, gs);
+
+	var pairs = primer3.p3_get_rv_best_pairs(res);
+
+	console.log(pairs);
+	console.log(getValue(pairs, 'i32'));
+	console.log(getValue(pairs+4, 'i32'));
+	console.log("----");
+
+	var arr = primer3.p3_get_rv_fwd(res);
+	console.log(arr);
+	console.log(getValue(arr, 'i32'));
+	console.log(getValue(arr+4, 'i32'));
+	console.log(getValue(arr+8, 'i32'));
+	console.log(getValue(arr+12, 'i32'));
+}
+
+</script>
+</body>
+
+</html>
