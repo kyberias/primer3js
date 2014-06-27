@@ -40,6 +40,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include "oligotm.h"
 
+#define Pow(a,b) pow((double)a,(double)b)
+
 #define T_KELVIN 273.15;
 #define A_CHAR 'A'
 #define G_CHAR 'G'
@@ -455,23 +457,23 @@ oligotm(const  char *s,
      if (div_monov_ratio < crossover_point) {
 	/* use only monovalent salt correction, Eq 22 (Owczarzy et al., 2004) */
 	correction
-	  = (((4.29 * gcPercent) - 3.95) * pow(10,-5) * log(K_mM / 1000.0))
-	    + (9.40 * pow(10,-6) * (pow(log(K_mM / 1000.0),2)));
+	  = (((4.29 * gcPercent) - 3.95) * Pow(10,-5) * log(K_mM / 1000.0))
+	  + (9.40 * Pow(10, -6) * (pow(log(K_mM / 1000.0), 2)));
      } else {
 	/* magnesium effects are dominant, Eq 16 (Owczarzy et al., 2008) is used */
-	b =- 9.11 * pow(10,-6);
-	c = 6.26 * pow(10,-5);
-	e =- 4.82 * pow(10,-4);
-	f = 5.25 * pow(10,-4);
-	a = 3.92 * pow(10,-5);
-	d = 1.42 * pow(10,-5);
-	g = 8.31 * pow(10,-5);
+		 b = -9.11 * Pow(10, -6);
+		 c = 6.26 * Pow(10, -5);
+		 e = -4.82 * Pow(10, -4);
+		 f = 5.25 * Pow(10, -4);
+		 a = 3.92 * Pow(10, -5);
+		 d = 1.42 * Pow(10, -5);
+		 g = 8.31 * Pow(10, -5);
 	if(div_monov_ratio < 6.0) {
 	   /* in particular ratio of conc of monov and div cations
 	    *             some parameters of Eq 16 must be corrected (a,d,g) */
-	   a = 3.92 * pow(10,-5) * (0.843 - (0.352 * sqrt(K_mM/1000.0) * log(K_mM/1000.0)));
-	   d = 1.42 * pow(10,-5) * (1.279 - 4.03 * pow(10,-3) * log(K_mM/1000.0) - 8.03 * pow(10,-3) * pow(log(K_mM/1000.0),2));
-	   g = 8.31 * pow(10,-5) * (0.486 - 0.258 * log(K_mM/1000.0) + 5.25 * pow(10,-3) * pow(log(K_mM/1000.0),3));
+		a = 3.92 * Pow(10, -5) * (0.843 - (0.352 * sqrt(K_mM / 1000.0) * log(K_mM / 1000.0)));
+		d = 1.42 * Pow(10, -5) * (1.279 - 4.03 * Pow(10, -3) * log(K_mM / 1000.0) - 8.03 * Pow(10, -3) * pow(log(K_mM / 1000.0), 2));
+		g = 8.31 * Pow(10, -5) * (0.486 - 0.258 * log(K_mM / 1000.0) + 5.25 * Pow(10, -3) * pow(log(K_mM / 1000.0), 3));
 	}
 	
 	correction = a + (b * log(free_divalent))

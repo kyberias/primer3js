@@ -44,7 +44,8 @@
 #include <setjmp.h>
 #include <ctype.h>
 #include <math.h>
-#include <unistd.h>
+//#include <unistd.h>
+#include <process.h>
 
 #if defined(__sun)
 #include <ieeefp.h>
@@ -103,6 +104,8 @@
 #else
 # define isFinite(x) finite(x)
 #endif
+
+#define finite(x) isfinite(x)
 
 #define isPositive(x) ((x) > 0 ? (1) : (0))
 

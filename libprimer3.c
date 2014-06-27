@@ -54,7 +54,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace std
 {
-  using namespace __gnu_cxx;
+#if !defined(_WIN32)
+	using namespace __gnu_cxx;
+#endif
 }
 
 #include "dpal.h"
@@ -3047,7 +3049,7 @@ calc_and_check_oligo_features(const p3_global_settings *pa,
   /* end T. Koressar's changes */
 
   /* edited by A. Untergasser for forcing sequence use */
-  if ((po_args->must_match_five_prime != NULL) or
+  if ((po_args->must_match_five_prime != NULL) ||
       (po_args->must_match_three_prime != NULL)) {
     if (primer_must_match(pa, h, stats, oligo_seq,
                           po_args->must_match_three_prime,
@@ -5242,30 +5244,30 @@ static int compare_nucleotides(const char a, const char b)
   if ( x == y ) {
     return 1;
   }
-  if (( x == 'N') or (y == 'N')) {
+  if (( x == 'N') || (y == 'N')) {
     return 1;
   }
   if (x == 'A') {
-    if ((y == 'R') or (y == 'W') or (y == 'M') or
-	(y == 'H') or (y == 'D') or (y == 'V')){
+    if ((y == 'R') || (y == 'W') || (y == 'M') ||
+	(y == 'H') || (y == 'D') || (y == 'V')){
       return 1;
     }
   }
   if (x == 'G') {
-    if ((y == 'R') or (y == 'S') or (y == 'K') or
-	(y == 'B') or (y == 'D') or (y == 'V')){
+	  if ((y == 'R') || (y == 'S') || (y == 'K') ||
+		  (y == 'B') || (y == 'D') || (y == 'V')){
       return 1;
     }
   }
   if (x == 'C') {
-    if ((y == 'Y') or (y == 'S') or (y == 'M') or
-	(y == 'B') or (y == 'H') or (y == 'V')){
+	  if ((y == 'Y') || (y == 'S') || (y == 'M') ||
+		  (y == 'B') || (y == 'H') || (y == 'V')){
       return 1;
     }
   }
   if (x == 'T') {
-    if ((y == 'Y') or (y == 'W') or (y == 'K') or
-	(y == 'B') or (y == 'H') or (y == 'D')){
+	  if ((y == 'Y') || (y == 'W') || (y == 'K') ||
+		  (y == 'B') || (y == 'H') || (y == 'D')){
       return 1;
     }
   }

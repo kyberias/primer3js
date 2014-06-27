@@ -40,8 +40,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <ctype.h>
 #include <string.h> /* strcmp() */
 #include <stdlib.h> /* free() */
-#include <getopt.h> /* getopt() */
-#include <unistd.h>
+//#include <getopt.h> /* getopt() */
+#include "getopt.h"
+//#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "thal.h"
@@ -53,6 +54,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* Check on which OS we compile */
 #if defined(_WIN32) || defined(WIN32) || defined (__WIN32__) || defined(__CYGWIN__) || defined(__MINGW32__)
 #define OS_WIN
+#define S_ISDIR(m) (m & _S_IFDIR)
 #endif
 
 /* Some function prototypes */
@@ -64,9 +66,29 @@ static void   read_thermodynamic_parameters();
 static const char *pr_release;
 static const char *pr_program_name;
 
+void test_it()
+{
+	p3_global_settings *global_pa = p3_create_global_settings();
+	seq_args* args = create_seq_arg();
+
+	p3_set_sa_sequence(args, "GATTAGATTTTTTTTTTTTTTTTTTTTTGATTAGA");
+	p3_set_sa_left_input(args, "GATTAGA");
+	p3_set_sa_right_input(args, "TCTAATC");
+
+	p3retval* res = choose_primers(global_pa, args);
+
+	puts(p3_get_rv_per_sequence_errors(res));
+
+	const pair_array_t* arr = p3_get_rv_best_pairs(res);
+}
+
 int
 main(int argc, char *argv[])
 {
+	test_it();
+	return 0;
+
+
   /* Setup the input data structures handlers */
   int format_output = 0;
   int strict_tags = 0;
@@ -494,8 +516,8 @@ read_thermodynamic_parameters()
 
 #ifdef OS_WIN
     /* in windows check for .\\primer3_config */
-    struct stat st;
-    if ((stat(".\\primer3_config", &st) == 0) && S_ISDIR(st.st_mode)) {
+    struct _stat st;
+    if ((_stat(".\\primer3_config", &st) == 0) && S_ISDIR(st.st_mode)) {
       thermodynamic_params_path =
 	(char*) malloc(strlen(".\\primer3_config\\") * sizeof(char) + 1);
       if (NULL == thermodynamic_params_path) exit (-2); /* Out of memory */

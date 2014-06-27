@@ -17,6 +17,7 @@ function Primer3() {
 	this.choose_primers = Module.cwrap('choose_primers', 'number', ['number', 'number']);
 	this.p3_get_rv_best_pairs = Module.cwrap('p3_get_rv_best_pairs', 'number', ['number', 'string']);
 	this.p3_get_rv_fwd = Module.cwrap('p3_get_rv_fwd', 'number', ['number'])
+	this.p3_get_rv_per_sequence_errors = Module.cwrap('p3_get_rv_per_sequence_errors', 'string', ['number'])
 
 	this.libprimer3_release = Module.cwrap('libprimer3_release', 'string')
 }
@@ -29,11 +30,13 @@ function onLoad()
 	var gs = primer3.p3_create_global_settings();
 	var arg = primer3.create_seq_arg();
 
-	primer3.p3_set_sa_sequence(arg, 'GATTAGATTTTTTTTTTTTTTTTTTTTTGATTAGA');
+	primer3.p3_set_sa_sequence(arg, 'GTAGTCAGTAGACNATGACNACTGACGATGCAGACNACACACACACACACAGCACACAGGTATTAGTGGGCCATTCGATCCCGACCCAAATCGA');
 	primer3.p3_set_sa_left_input(arg, 'GATTAGA');
 	primer3.p3_set_sa_right_input(arg, 'TCTAATC');
 
-	var res = primer3.choose_primers(arg, gs);
+	var res = primer3.choose_primers(gs, arg);
+
+	console.log(primer3.p3_get_rv_per_sequence_errors(res));
 
 	var pairs = primer3.p3_get_rv_best_pairs(res);
 
