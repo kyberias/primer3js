@@ -44,8 +44,8 @@
 #include <setjmp.h>
 #include <ctype.h>
 #include <math.h>
-//#include <unistd.h>
-#include <process.h>
+#include <unistd.h>
+//#include <process.h>
 
 #if defined(__sun)
 #include <ieeefp.h>
